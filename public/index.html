@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="上傳影片，在本機產生繁體中文逐字稿、PowerPoint 與品質 B-roll 規劃。" />
+    <title>Frameflow — Video Story Studio</title>
+    <link rel="stylesheet" href="/styles.css?v=20261018-root-dark-canvas-1" />
+  </head>
+  <body>
+    <div class="ambient-particles" id="ambient-particles" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <header class="topbar" aria-label="Frameflow">
+      <a class="brand" href="/" aria-label="返回 Frameflow 主頁">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>FRAMEFLOW</span>
+      </a>
+    </header>
+
+    <main id="studio">
+      <section class="studio shell">
+        <div class="workstation-head">
+          <div>
+            <span>AI 影片剪輯</span>
+            <h1>影片製作工作站</h1>
+            <p>依步驟完成素材、輸出功能與製作設定。</p>
+          </div>
+        </div>
+
+        <ol class="workflow-progress" aria-label="目前製作流程">
+          <li class="is-current" data-product-stage="upload"><span>01</span><strong>上傳</strong><small>選擇影片</small></li>
+          <li data-product-stage="transcript"><span>02</span><strong>原稿確認</strong><small>先修逐字稿</small></li>
+          <li data-product-stage="ai-draft"><span>03</span><strong>AI 校稿 / 精華</strong><small>產生可選版本</small></li>
+          <li data-product-stage="features"><span>04</span><strong>功能選擇</strong><small>決定輸出內容</small></li>
+          <li data-product-stage="refine"><span>05</span><strong>精修確認</strong><small>粗剪與字幕</small></li>
+          <li data-product-stage="outputs"><span>06</span><strong>輸出結果</strong><small>下載成品</small></li>
+        </ol>
+
+        <form id="project-form" class="project-form simple-form">
+          <div class="workflow-shell transcript-first-shell">
+            <ol class="step-tabs" aria-label="製作步驟">
+              <li><button class="step-tab is-active" type="button" data-step-target="1" aria-current="step"><span>01</span><strong>素材</strong></button></li>
+              <li><button class="step-tab" type="button" data-step-target="2"><span>02</span><strong>功能</strong></button></li>
+              <li><button class="step-tab" type="button" data-step-target="3"><span>03</span><strong>設定</strong></button></li>
+            </ol>
+
+            <div class="workflow-panels">
+            <section class="station-panel upload-panel workflow-panel is-active" data-step-panel="1">
+              <div class="panel-title">
+                <span>01</span>
+                <strong>素材</strong>
+              </div>
+              <label class="drop-zone" id="drop-zone" for="video-input">
+                <input id="video-input" name="video" type="file" accept="video/*,audio/*,.mkv,.avi" />
+                <span class="upload-glyph" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0 4 4m-4-4-4 4"/><path d="M20 16.5A4.5 4.5 0 0 1 15.5 21h-7A5.5 5.5 0 0 1 7 10.2 6 6 0 0 1 18.7 13"/></svg>
+                </span>
+                <strong id="file-label">拖放影片</strong>
+                <span id="file-hint">或點擊選取素材</span>
+                <small>MP4 / MOV / WebM / MKV</small>
+              </label>
+            </section>
+
+            <section class="station-panel output-panel workflow-panel" data-step-panel="2" hidden>
+              <div class="panel-title">
+                <span>02</span>
+                <strong>輸出</strong>
+              </div>
+              <div class="quick-summary" aria-label="已選功能">
+                <span>逐字稿</span><span>字幕</span><span>AI 粗剪</span><span>PPT/PDF</span><span>AI B-roll</span><span>將 PPT 剪輯入成片</span>
+              </div>
+
+              <fieldset class="feature-picker" aria-label="功能選擇">
+                <legend>選擇想要的功能</legend>
+                <div class="feature-grid">
+                  <label class="feature-option">
+                    <input type="hidden" name="outputTranscript" value="false" />
+                    <input class="feature-toggle" id="feature-transcript" name="outputTranscript" type="checkbox" value="true" checked />
+                    <span><strong>逐字稿</strong><small>第一步會先產生</small></span>
+                  </label>
+                  <label class="feature-option">
+                    <input type="hidden" name="burnSubtitles" value="false" />
+                    <input class="feature-toggle" id="feature-burn-subtitles" name="burnSubtitles" type="checkbox" value="true" checked />
+                    <span><strong>字幕</strong><small>會先進入可修改畫面</small></span>
+                  </label>
+                  <label class="feature-option">
+                    <input type="hidden" name="roughCut" value="false" />
+                    <input class="feature-toggle" id="feature-roughcut" name="roughCut" type="checkbox" value="true" checked />
+                    <span><strong>AI 粗剪</strong><small>先產生草稿，可人工調整</small></span>
+                  </label>
+                  <label class="feature-option">
+                    <input type="hidden" name="outputPpt" value="false" />
+                    <input class="feature-toggle" id="feature-ppt" name="outputPpt" type="checkbox" value="true" checked />
+                    <span><strong>PPT/PDF</strong><small>自動整理簡報與 PDF</small></span>
+                  </label>
+                  <label class="feature-option">
+                    <input type="hidden" name="aiBroll" value="false" />
+                    <input class="feature-toggle" id="feature-ai-broll" name="aiBroll" type="checkbox" value="true" checked />
+                    <span><strong>AI B-roll</strong><small>依內容生成補充畫面</small></span>
+                  </label>
+                  <label class="feature-option">
+                    <input type="hidden" name="insertPpt" value="false" />
+                    <input class="feature-toggle" id="feature-insert-ppt" name="insertPpt" type="checkbox" value="true" checked />
+                    <span><strong>將 PPT 剪輯入成片</strong><small>讓成片更完整</small></span>
+                  </label>
+                </div>
+              </fieldset>
+            </section>
+
+            <section class="advanced-settings station-panel workflow-panel" data-step-panel="3" hidden>
+              <div class="panel-title">
+                <span>03</span>
+                <strong>設定</strong>
+              </div>
+              <div class="field-grid">
+                <label class="field field-wide">
+                  <span>專案標題 <em>選填</em></span>
+                  <input name="title" id="title" type="text" maxlength="60" placeholder="未填寫時依內容摘要自動命名" />
+                </label>
+                <div class="field">
+                  <label for="language">語言</label>
+                  <select name="language" id="language" data-enhanced-select data-searchable="true" data-search-placeholder="搜尋語言">
+                    <option value="auto" selected data-keywords="auto detect 自動 偵測">自動</option>
+                    <option value="zh" data-keywords="mandarin chinese 中文 繁體 簡體">中文</option>
+                    <option value="yue" data-keywords="cantonese 粵語 廣東話 香港">粵語</option>
+                    <option value="en" data-keywords="english 英文">英文</option>
+                    <option value="ja" data-keywords="japanese 日文 日本語">日文</option>
+                    <option value="ko" data-keywords="korean 韓文 한국어">韓文</option>
+                    <option value="es" data-keywords="spanish 西班牙文 español">西班牙文</option>
+                    <option value="fr" data-keywords="french 法文 français">法文</option>
+                    <option value="de" data-keywords="german 德文 deutsch">德文</option>
+                    <option value="it" data-keywords="italian 義大利文 italiano">義大利文</option>
+                    <option value="pt" data-keywords="portuguese 葡萄牙文 português">葡萄牙文</option>
+                    <option value="ru" data-keywords="russian 俄文 русский">俄文</option>
+                    <option value="ar" data-keywords="arabic 阿拉伯文 العربية">阿拉伯文</option>
+                    <option value="hi" data-keywords="hindi 印地文 हिन्दी">印地文</option>
+                    <option value="vi" data-keywords="vietnamese 越南文 tiếng việt">越南文</option>
+                    <option value="th" data-keywords="thai 泰文 ไทย">泰文</option>
+                    <option value="id" data-keywords="indonesian 印尼文 bahasa indonesia">印尼文</option>
+                    <option value="ms" data-keywords="malay 馬來文 bahasa melayu">馬來文</option>
+                    <option value="tr" data-keywords="turkish 土耳其文 türkçe">土耳其文</option>
+                    <option value="nl" data-keywords="dutch 荷蘭文 nederlands">荷蘭文</option>
+                    <option value="pl" data-keywords="polish 波蘭文 polski">波蘭文</option>
+                    <option value="uk" data-keywords="ukrainian 烏克蘭文 українська">烏克蘭文</option>
+                  </select>
+                </div>
+                <div class="field"><label for="slide-count">PPT 頁數</label><select name="slideCount" id="slide-count" data-enhanced-select><option value="0" selected>自動判斷</option><option value="6">6</option><option value="8">8</option><option value="10">10</option><option value="12">12</option></select></div>
+                <div class="field"><label for="ai-broll-count">B-roll 數量</label><select name="aiBrollCount" id="ai-broll-count" data-enhanced-select><option value="0" selected>自動判斷</option><option value="3">目標 3 段</option><option value="6">目標 6 段</option><option value="10">目標 10 段</option></select></div>
+                <label class="field field-half">
+                  <span>主題補充 <em>非必填</em></span>
+                  <textarea name="topicContext" id="topic-context" rows="3" maxlength="500" placeholder="例：這支影片在談小團隊營運、年度計畫或成本壓力"></textarea>
+                  <small class="field-hint">用一句話補充影片主題，幫助 AI 理解脈絡。</small>
+                </label>
+                <label class="field field-half">
+                  <span>專有名詞 <em>非必填</em></span>
+                  <textarea name="properNouns" id="proper-nouns" rows="3" maxlength="500" placeholder="每行一個：人名、品牌、公司、產品、英文縮寫"></textarea>
+                  <small class="field-hint">只用來幫助轉錄、標題、PPT 與 B-roll 理解，不會當成必填。</small>
+                </label>
+              </div>
+            </section>
+            </div>
+          </div>
+
+          <div class="notice hidden" id="notice" role="alert"></div>
+          <div class="form-actions workflow-actions">
+            <button class="button button-secondary hidden" id="step-back" type="button" disabled>上一步</button>
+            <button class="button button-primary" id="step-next" type="button"><span>下一步</span><span aria-hidden="true">→</span></button>
+            <button class="button button-primary hidden" id="submit-button" type="submit"><span>開始轉逐字稿</span><span aria-hidden="true">→</span></button>
+          </div>
+        </form>
+      </section>
+
+      <section class="results shell hidden" id="results" aria-live="polite">
+        <div class="result-hero">
+          <div>
+            <p class="kicker">輸出完成</p>
+            <h2 id="result-title">內容專案已完成</h2>
+            <p id="result-meta"></p>
+            <p class="result-runtime hidden" id="result-runtime"></p>
+          </div>
+          <div class="result-hero-actions">
+            <span class="ready-mark" aria-hidden="true">✓</span>
+          </div>
+        </div>
+
+        <ol class="workflow-progress workflow-progress-results" aria-label="目前製作流程">
+          <li data-product-stage="upload"><span>01</span><strong>上傳</strong><small>選擇影片</small></li>
+          <li data-product-stage="transcript"><span>02</span><strong>原稿確認</strong><small>先修逐字稿</small></li>
+          <li data-product-stage="ai-draft"><span>03</span><strong>AI 校稿 / 精華</strong><small>產生可選版本</small></li>
+          <li data-product-stage="features"><span>04</span><strong>功能選擇</strong><small>決定輸出內容</small></li>
+          <li data-product-stage="refine"><span>05</span><strong>精修確認</strong><small>粗剪與字幕</small></li>
+          <li data-product-stage="outputs"><span>06</span><strong>輸出結果</strong><small>下載成品</small></li>
+        </ol>
+
+        <section class="final-output hidden" id="final-output">
+          <div class="final-output-copy">
+            <p class="kicker">成片</p>
+            <h3>完整成片 MP4</h3>
+            <p>已完成剪輯輸出。</p>
+          </div>
+          <div class="final-video-frame">
+            <video id="final-video" controls playsinline preload="metadata"></video>
+            <span class="final-video-seeking" aria-hidden="true">正在定位畫面…</span>
+          </div>
+          <div class="final-cues" id="final-cues"></div>
+        </section>
+
+        <section class="transcript-stage hidden" id="transcript-stage" aria-label="逐字稿審核">
+	          <div class="panel-heading">
+	            <div>
+	              <p class="kicker">逐字稿</p>
+	              <h3>確認內容，並選擇後續製作稿件</h3>
+	            </div>
+	              <p id="transcript-stage-status">請勾選一份逐字稿，作為後續字幕、粗剪、PPT、B-roll 與成片的內容依據。</p>
+	          </div>
+	          <div class="transcript-stage-toolbar transcript-edit-only">
+	            <select class="hidden" id="transcript-version-select" aria-label="選擇逐字稿版本" tabindex="-1"></select>
+	            <div class="download-actions">
+	              <a class="download-action" id="transcript-stage-original-download" href="#" download>下載原始稿</a>
+	              <a class="download-action hidden" id="transcript-stage-proofread-download" href="#" download>下載 AI 校稿版</a>
+	              <a class="download-action hidden" id="transcript-stage-highlight-download" href="#" download>下載 AI 精華摘要版</a>
+	            </div>
+	          </div>
+          <section class="transcript-version-accordion transcript-edit-only" id="transcript-version-accordion" aria-label="逐字稿版本">
+            <article class="transcript-version-item is-open" data-transcript-panel="original">
+              <label class="transcript-version-choice" title="選擇原始逐字稿作為後續製作稿件">
+                <input type="radio" name="production-transcript-version" data-transcript-choice="original" aria-label="選擇原始逐字稿作為後續製作稿件" />
+              </label>
+              <button class="transcript-version-toggle" type="button" data-transcript-toggle="original" aria-expanded="true" aria-controls="transcript-panel-original">
+                <span class="transcript-current-label" id="transcript-current-label" aria-live="polite">
+                  <span>01 · 原稿</span>
+                  <strong>原始逐字稿</strong>
+                  <em id="transcript-word-count">總字數 0 字</em>
+                </span>
+                <span class="transcript-version-description">先檢查辨識內容，可直接點擊修改。</span>
+                <i aria-hidden="true"></i>
+              </button>
+              <div class="transcript-version-panel" id="transcript-panel-original">
+                <div class="transcript-editor-wrap" id="transcript-editor-wrap">
+                  <div class="ai-change-legend hidden" id="ai-change-legend"><i></i><span>AI 修改處</span></div>
+                  <pre class="transcript-proofread-markup hidden" id="transcript-proofread-markup" aria-hidden="true"></pre>
+                  <textarea id="transcript-stage-text" spellcheck="false" aria-label="可修正逐字稿"></textarea>
+                </div>
+              </div>
+            </article>
+
+            <article class="transcript-version-item is-unavailable" data-transcript-panel="proofread">
+              <label class="transcript-version-choice" title="選擇 AI 校稿版作為後續製作稿件">
+                <input type="radio" name="production-transcript-version" data-transcript-choice="proofread" aria-label="選擇 AI 校稿版作為後續製作稿件" disabled />
+              </label>
+              <button class="transcript-version-toggle" type="button" data-transcript-toggle="proofread" aria-expanded="false" aria-controls="transcript-panel-proofread" disabled>
+                <span class="transcript-version-label">
+                  <span>02 · AI 校稿</span>
+                  <strong>AI 校稿版</strong>
+                  <em id="transcript-proofread-word-count">等待產生</em>
+                </span>
+                <span class="transcript-version-description">修正錯字、刪除贅字，修改處會以亮色標記。</span>
+                <i aria-hidden="true"></i>
+              </button>
+              <div class="transcript-version-panel transcript-compare" id="transcript-panel-proofread" hidden>
+                <div class="transcript-view-mode-bar">
+                  <button class="transcript-view-mode-toggle" id="transcript-proofread-view-toggle" type="button" data-transcript-view-mode-toggle="proofread" aria-pressed="false">純稿件</button>
+                </div>
+                <section class="transcript-compare-card transcript-source-card" aria-label="原始稿來源">
+                  <div class="transcript-compare-head">
+                    <span>ORIGINAL</span>
+                    <strong>原始稿來源</strong>
+                    <small>有框線的句段代表目前 AI 校稿版有採用。</small>
+                  </div>
+                  <div class="transcript-source-picker" id="transcript-proofread-source-picker"></div>
+                  <pre class="hidden" id="transcript-compare-original" aria-hidden="true"></pre>
+                </section>
+                <section class="transcript-compare-card transcript-compare-card-proofread" aria-label="AI 校稿版">
+                  <div class="transcript-compare-head">
+                    <div>
+                      <span>AI EDIT</span>
+                      <strong>AI 校稿版</strong>
+                      <small>可直接修改錯字、刪減文字，或從左邊補回漏字。</small>
+                    </div>
+                    <span class="transcript-edit-hint">點擊文字修改</span>
+                  </div>
+                  <pre id="transcript-compare-proofread" contenteditable="plaintext-only" spellcheck="false" aria-label="可直接修改 AI 校稿版"></pre>
+                </section>
+              </div>
+            </article>
+
+            <article class="transcript-version-item is-unavailable" data-transcript-panel="highlight">
+              <label class="transcript-version-choice" title="選擇 AI 精華摘要版作為後續製作稿件">
+                <input type="radio" name="production-transcript-version" data-transcript-choice="highlight" aria-label="選擇 AI 精華摘要版作為後續製作稿件" disabled />
+              </label>
+              <button class="transcript-version-toggle" type="button" data-transcript-toggle="highlight" aria-expanded="false" aria-controls="transcript-panel-highlight" disabled>
+                <span class="transcript-version-label">
+                  <span>03 · AI 精華</span>
+                  <strong>AI 精華摘要版</strong>
+                  <em id="transcript-highlight-word-count">等待產生</em>
+                </span>
+                <span class="transcript-version-description">保留開頭、重點與結尾；可補同一句裡 AI 漏掉的內容。</span>
+                <i aria-hidden="true"></i>
+              </button>
+              <div class="transcript-version-panel transcript-highlight-view" id="transcript-panel-highlight" hidden>
+                <div class="transcript-view-mode-bar">
+                  <button class="transcript-view-mode-toggle" id="transcript-highlight-view-toggle" type="button" data-transcript-view-mode-toggle="highlight" aria-pressed="false">純稿件</button>
+                </div>
+                <section class="transcript-compare-card transcript-source-card" aria-label="原始稿來源">
+                  <div class="transcript-compare-head">
+                    <span>ORIGINAL</span>
+                    <strong>原始稿來源</strong>
+                    <small>有框線的句段代表目前 AI 精華摘要版有採用。</small>
+                  </div>
+                  <div class="transcript-source-picker" id="transcript-highlight-source-picker"></div>
+                </section>
+                <section class="transcript-compare-card transcript-compare-card-highlight" aria-label="AI 精華摘要版">
+                  <div class="transcript-compare-head">
+                    <div>
+                      <span>AI HIGHLIGHT</span>
+                      <strong>AI 精華摘要版</strong>
+                      <small>可刪減、修錯字，或從左邊原始稿補回同一句漏掉的內容。</small>
+                    </div>
+                    <span class="transcript-edit-hint">點擊文字修改</span>
+                  </div>
+                  <div class="transcript-insert-status hidden" id="transcript-highlight-insert-status" aria-live="polite"></div>
+                  <pre id="transcript-highlight-text" contenteditable="plaintext-only" spellcheck="false" aria-label="可直接修改 AI 精華摘要版"></pre>
+                </section>
+              </div>
+            </article>
+          </section>
+	          <div class="transcript-stage-actions">
+              <p class="action-expectation" id="transcript-stage-action-note">確認原稿後，請在左側勾選後續製作要使用的逐字稿版本。</p>
+	            <button class="button button-secondary" id="transcript-stage-save" type="button">只保存目前修正</button>
+	            <button class="button button-secondary hidden" id="transcript-stage-back-to-edit" type="button">回到逐字稿</button>
+		            <button class="button button-primary" id="transcript-stage-generate-full" type="button">確認原稿</button>
+	          </div>
+        </section>
+
+        <section class="feature-selection-page hidden" id="feature-selection-page" aria-label="功能選擇">
+          <section class="post-transcript-options" aria-label="後續功能選擇">
+            <div class="panel-heading">
+              <div><p class="kicker">下一步</p><h3>選擇後續要製作的功能</h3></div>
+              <p id="selected-production-transcript-note">後續製作會沿用上一頁勾選的逐字稿。</p>
+            </div>
+            <section class="post-feature-section" aria-label="選擇輸出功能">
+              <div class="quick-summary" id="post-feature-summary" aria-label="後續已選功能"></div>
+              <div class="feature-grid">
+                <label class="feature-option">
+                  <input class="post-feature-toggle" id="post-feature-transcript" type="checkbox" checked />
+                  <span><strong>逐字稿</strong><small>保留文字稿 TXT</small></span>
+                </label>
+                <label class="feature-option">
+                  <input class="post-feature-toggle" id="post-feature-burn-subtitles" type="checkbox" checked />
+                  <span><strong>字幕</strong><small>會先進入可修改畫面</small></span>
+                </label>
+                <label class="feature-option">
+                  <input class="post-feature-toggle" id="post-feature-roughcut" type="checkbox" checked />
+                  <span><strong>AI 粗剪</strong><small>先產生草稿，可人工調整</small></span>
+                </label>
+                <label class="feature-option">
+                  <input class="post-feature-toggle" id="post-feature-ppt" type="checkbox" checked />
+                  <span><strong>PPT/PDF</strong><small>自動判斷頁數</small></span>
+                </label>
+                <label class="feature-option">
+                  <input class="post-feature-toggle" id="post-feature-ai-broll" type="checkbox" checked />
+                  <span><strong>AI B-roll</strong><small>依內容生成補充畫面</small></span>
+                </label>
+                <label class="feature-option">
+                  <input class="post-feature-toggle" id="post-feature-insert-ppt" type="checkbox" checked />
+                  <span><strong>將 PPT 剪輯入成片</strong><small>需同時製作 PPT</small></span>
+                </label>
+              </div>
+              <div class="field-grid post-option-grid">
+                <div class="field"><label for="post-slide-count">PPT 頁數</label><select id="post-slide-count"><option value="0" selected>自動判斷</option><option value="6">6</option><option value="8">8</option><option value="10">10</option><option value="12">12</option></select></div>
+                <div class="field"><label for="post-ai-broll-count">B-roll 數量</label><select id="post-ai-broll-count"><option value="0" selected>自動判斷</option><option value="3">目標 3 段</option><option value="6">目標 6 段</option><option value="10">目標 10 段</option></select></div>
+              </div>
+            </section>
+          </section>
+          <div class="feature-selection-actions">
+            <p class="action-expectation">按下後會開始製作；粗剪與字幕會先進入可修改畫面，確認後才輸出成片。</p>
+            <button class="button button-secondary" id="feature-selection-back" type="button">回到逐字稿</button>
+            <button class="button button-primary" id="feature-selection-start" type="button">開始製作成品</button>
+          </div>
+        </section>
+
+        <section class="revision-panel hidden" id="revision-panel" aria-label="調整與重新輸出">
+          <div>
+            <p class="kicker">調整</p>
+            <h3>回到上一步精修</h3>
+            <p>保留已完成素材，只重新輸出有調整的部分。</p>
+          </div>
+          <div class="revision-actions">
+            <button class="button button-secondary hidden" id="result-edit-roughcut" type="button">調整 AI 粗剪</button>
+            <button class="button button-secondary hidden" id="result-edit-subtitles" type="button">精修字幕</button>
+          </div>
+        </section>
+
+        <section class="timeline-section hidden" id="timeline-section">
+          <div class="panel-heading">
+            <div><p class="kicker">時間軸</p><h3>剪入點</h3></div>
+            <p id="timeline-detail">B-roll 與 PPT 的插入位置。</p>
+          </div>
+          <div class="video-timeline" id="video-timeline" aria-label="B-roll 剪入時間軸"></div>
+        </section>
+
+        <section class="broll-showcase hidden" id="broll-showcase">
+          <div class="panel-heading">
+            <div><p class="kicker">B-roll</p><h3>生成片段</h3></div>
+            <p id="broll-showcase-detail">可播放、下載或跳到成片位置。</p>
+            <div class="rail-controls" aria-label="B-roll 列表滑動控制">
+              <button class="rail-button" type="button" data-rail-target="broll-showcase-grid" data-rail-direction="-1" aria-label="往左看 B-roll">‹</button>
+              <button class="rail-button" type="button" data-rail-target="broll-showcase-grid" data-rail-direction="1" aria-label="往右看 B-roll">›</button>
+            </div>
+          </div>
+          <section class="generation-notices hidden" id="generation-notices" aria-label="製作提醒" aria-live="polite"></section>
+          <div class="broll-showcase-grid" id="broll-showcase-grid"></div>
+        </section>
+
+        <section class="ppt-preview-section">
+          <div class="panel-heading">
+            <div><p class="kicker">PPT</p><h3>簡報預覽</h3></div>
+            <div class="rail-controls" aria-label="簡報預覽滑動控制">
+              <button class="rail-button" type="button" data-rail-target="ppt-slides" data-rail-direction="-1" aria-label="往左看簡報">‹</button>
+              <button class="rail-button" type="button" data-rail-target="ppt-slides" data-rail-direction="1" aria-label="往右看簡報">›</button>
+            </div>
+          </div>
+          <div class="ppt-slides" id="ppt-slides"></div>
+        </section>
+        <div class="ppt-lightbox hidden" id="ppt-lightbox" role="dialog" aria-modal="true" aria-labelledby="ppt-lightbox-title">
+          <button class="ppt-lightbox-close" id="ppt-lightbox-close" type="button" aria-label="關閉簡報預覽">×</button>
+          <button class="ppt-lightbox-nav ppt-lightbox-prev" id="ppt-lightbox-prev" type="button" aria-label="上一張投影片">‹</button>
+          <figure class="ppt-lightbox-frame">
+            <img id="ppt-lightbox-image" alt="" />
+            <figcaption>
+              <strong id="ppt-lightbox-title">投影片預覽</strong>
+              <small>可用 ← ↑ 上一張，→ ↓ 下一張，Esc 關閉。</small>
+            </figcaption>
+          </figure>
+          <button class="ppt-lightbox-nav ppt-lightbox-next" id="ppt-lightbox-next" type="button" aria-label="下一張投影片">›</button>
+        </div>
+
+        <section class="download-center" id="download-center" aria-label="輸出檔案下載">
+          <div class="panel-heading">
+            <div><p class="kicker">下載中心</p><h3>下載成品</h3></div>
+            <p>主要成品放在最前面；文字、字幕、簡報和剪輯包整理在附加素材。</p>
+          </div>
+          <div class="download-groups">
+            <section class="download-group" aria-label="主要成品">
+              <div class="download-group-title"><span>01</span><strong>主要成品</strong></div>
+              <div class="download-center-grid download-center-grid-primary">
+                <article class="download-unit download-unit-wide" id="video-download-unit">
+                  <div>
+                    <span>成片</span>
+                    <strong>完整影片 MP4</strong>
+                    <small>最後完成的影片檔</small>
+                  </div>
+                  <a class="download-action" id="video-download-button" href="#" download>下載 MP4</a>
+                </article>
+              </div>
+            </section>
+
+            <section class="download-group" aria-label="附加素材">
+              <div class="download-group-title"><span>02</span><strong>附加素材</strong></div>
+              <div class="download-center-grid">
+            <article class="download-unit" id="ppt-download-unit">
+              <div>
+                <span>簡報</span>
+                <strong>簡報檔案</strong>
+                <small>可編輯檔與 PDF</small>
+              </div>
+              <div class="download-actions">
+                <a class="download-action" id="ppt-download-button" href="#" download>下載 PPTX</a>
+                <a class="download-action" id="ppt-pdf-download-button" href="#" download>下載 PDF</a>
+              </div>
+            </article>
+            <article class="download-unit" id="transcript-download-unit">
+              <div>
+                <span>文字</span>
+                <strong>逐字稿</strong>
+                <small>字幕式文字</small>
+              </div>
+              <a class="download-action" id="transcript-download-button" href="#" download>下載 TXT</a>
+            </article>
+            <article class="download-unit" id="subtitle-download-unit">
+              <div>
+                <span>字幕</span>
+                <strong>字幕檔</strong>
+                <small>精修後 SRT / ASS</small>
+              </div>
+              <div class="download-actions">
+                <a class="download-action hidden" id="subtitle-srt-link" href="#" download>下載 SRT</a>
+                <a class="download-action hidden" id="subtitle-ass-link" href="#" download>下載 ASS</a>
+              </div>
+            </article>
+            <article class="download-unit download-unit-wide" id="editing-package-download-unit">
+              <div>
+                <span>剪輯素材</span>
+                <strong>剪輯包</strong>
+                <small>影片、字幕、PPT、B-roll 與時間線資料</small>
+              </div>
+              <a class="download-action" id="editing-package-download-button" href="#" download>下載 ZIP</a>
+            </article>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <div class="result-transcript-return" id="result-transcript-return">
+          <div>
+            <strong>想用另一份稿件重新製作？</strong>
+            <span>回到逐字稿後，可改用手動校稿版、AI 校稿版或 AI 精華摘要版。</span>
+          </div>
+          <button class="button button-secondary" id="result-back-to-transcript" type="button">回到逐字稿</button>
+        </div>
+
+        <div class="download-compat-links" hidden aria-hidden="true">
+          <a id="subtitled-video-link" href="#" download>精修字幕影片</a>
+          <a id="ppt-link" href="#" download>PowerPoint 簡報</a>
+          <a id="ppt-pdf-link" href="#" download>簡報 PDF</a>
+          <a id="ppt-open-link" href="#" download>下載 PPTX</a>
+          <a id="ppt-pdf-open-link" href="#" download>下載 PDF</a>
+          <a id="transcript-link" href="#" download>繁中逐字稿</a>
+          <a id="broll-csv-link" href="#" download>B-roll 規劃表</a>
+          <a id="broll-json-link" href="#" download>B-roll JSON</a>
+          <a id="roughcut-video-link" href="#" download>AI 粗剪影片</a>
+          <a id="roughcut-plan-link" href="#" download>AI 粗剪計畫</a>
+          <a id="editing-package-link" href="#" download>剪輯包</a>
+          <a id="final-video-link" href="#" download><span>下載完整成片</span></a>
+        </div>
+      </section>
+    </main>
+
+    <section class="roughcut-review-modal hidden" id="roughcut-review-modal" role="dialog" aria-modal="true" aria-labelledby="roughcut-review-title">
+      <div class="roughcut-review-panel">
+        <div class="panel-heading">
+          <div><p class="kicker">粗剪精修</p><h3 id="roughcut-review-title">調整 AI 粗剪片段</h3></div>
+        </div>
+        <div class="roughcut-preview-stack">
+          <div class="roughcut-player-frame">
+            <video id="roughcut-review-video" controls playsinline preload="auto"></video>
+            <div class="roughcut-player-status">
+              <p class="roughcut-preview-note" id="roughcut-preview-note">青色區域會保留；刪除滑塊覆蓋的片段會從預覽與成片移除。</p>
+            </div>
+            <div class="roughcut-preview-controls" aria-label="剪後預覽控制列">
+              <button class="roughcut-preview-play" id="roughcut-preview-play" type="button" aria-label="播放剪後預覽">播放</button>
+              <label class="roughcut-preview-scrub-wrap">
+                <span class="sr-only">剪後時間</span>
+                <input id="roughcut-preview-scrub" type="range" min="0" max="1" step="0.01" value="0" />
+              </label>
+              <output class="roughcut-preview-time" id="roughcut-preview-time" for="roughcut-preview-scrub">預覽 0:00 / 0:00</output>
+              <span class="roughcut-preview-source-time" id="roughcut-preview-source-time">原片位置 0:00</span>
+            </div>
+          </div>
+          <aside class="roughcut-transcript-preview" aria-labelledby="roughcut-transcript-preview-title">
+            <div class="roughcut-transcript-preview-head">
+              <div>
+                <p class="kicker">SCRIPT</p>
+                <h4 id="roughcut-transcript-preview-title">稿件播放</h4>
+              </div>
+              <span id="roughcut-transcript-preview-basis">目前稿件</span>
+            </div>
+            <div class="roughcut-transcript-lines" id="roughcut-transcript-lines" aria-live="polite"></div>
+          </aside>
+          <aside class="roughcut-preview-summary" aria-labelledby="roughcut-preview-summary-title">
+            <p class="kicker">EDIT SUMMARY</p>
+            <h4 id="roughcut-preview-summary-title">粗剪摘要</h4>
+            <div class="roughcut-review-meta" id="roughcut-review-meta" aria-live="polite"></div>
+          </aside>
+        </div>
+        <div class="roughcut-timeline-toolbar">
+          <div class="roughcut-timeline-title">
+            <p class="kicker">TIMELINE</p>
+            <strong>影片與聲音</strong>
+            <span class="roughcut-transcript-basis" id="roughcut-transcript-basis">逐字稿：未標記版本</span>
+          </div>
+          <div class="roughcut-zoom-control" aria-label="粗剪時間軸縮放">
+            <button class="step-arrow step-arrow-back" id="roughcut-undo-button" type="button" disabled aria-label="復原上一個粗剪修改"><span aria-hidden="true">↶</span></button>
+            <button class="step-arrow step-arrow-forward" id="roughcut-redo-button" type="button" disabled aria-label="重做下一個粗剪修改"><span aria-hidden="true">↷</span></button>
+            <button class="roughcut-add-mute-button" id="roughcut-add-mute" type="button" aria-label="在目前播放位置新增刪除滑塊" data-tooltip="新增刪除滑塊"><span aria-hidden="true">＋</span></button>
+            <button class="mini-button" id="roughcut-zoom-out" type="button" aria-label="縮小時間軸">−</button>
+            <label>
+              <span>縮放</span>
+              <input id="roughcut-zoom" type="range" min="1" max="8" step="0.5" value="5" />
+            </label>
+            <button class="mini-button" id="roughcut-zoom-in" type="button" aria-label="放大時間軸">＋</button>
+            <output id="roughcut-zoom-label" for="roughcut-zoom">5.0x</output>
+          </div>
+        </div>
+        <div class="roughcut-waveform" id="roughcut-waveform" aria-label="粗剪音訊波形，可按住空白處拖曳左右移動時間軸"></div>
+        <section class="roughcut-segment-inspector" id="roughcut-segment-inspector" aria-labelledby="roughcut-segment-inspector-title" hidden>
+          <div class="roughcut-inspector-heading">
+            <div>
+              <p class="kicker">SELECTED CLIP</p>
+              <h4 id="roughcut-segment-inspector-title">區塊詳細資料</h4>
+            </div>
+            <button class="mini-button" id="roughcut-inspector-close" type="button">收起</button>
+          </div>
+          <div class="roughcut-inspector-grid">
+            <div class="roughcut-inspector-status">
+              <span>片段狀態</span>
+              <strong id="roughcut-inspector-status">將刪除</strong>
+            </div>
+            <button class="roughcut-inspector-preview" id="roughcut-inspector-preview" type="button">播放片段</button>
+            <label>
+              <span>開始秒數</span>
+              <input id="roughcut-inspector-start" type="number" min="0" step="0.01" inputmode="decimal" />
+            </label>
+            <label>
+              <span>結束秒數</span>
+              <input id="roughcut-inspector-end" type="number" min="0" step="0.01" inputmode="decimal" />
+            </label>
+            <div class="roughcut-inspector-duration">
+              <span>片段長度</span>
+              <strong id="roughcut-inspector-duration">0.00 秒</strong>
+            </div>
+            <div class="roughcut-inspector-reason">
+              <span>判斷原因</span>
+              <strong id="roughcut-inspector-reason">尚未選擇</strong>
+              <p id="roughcut-inspector-text"></p>
+            </div>
+          </div>
+        </section>
+        <div class="roughcut-removal-list" id="roughcut-removal-list" aria-hidden="true" hidden></div>
+        <div class="roughcut-review-actions">
+          <button class="button button-secondary" id="roughcut-back-to-transcript" type="button">回逐字稿重修</button>
+          <button class="button button-primary" id="roughcut-render-button" type="button"><span>確認修改</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="subtitle-review-modal hidden" id="subtitle-review-modal" role="dialog" aria-modal="true" aria-labelledby="subtitle-review-title">
+      <div class="subtitle-review-panel">
+        <div class="panel-heading">
+          <div><p class="kicker">字幕精修</p><h3 id="subtitle-review-title">精修字幕草稿</h3></div>
+        </div>
+        <div class="subtitle-preview-stack">
+          <div class="subtitle-player-frame">
+            <video id="subtitle-review-video" controls playsinline preload="metadata"></video>
+            <div class="subtitle-preview-caption is-empty" id="subtitle-preview-caption" aria-live="polite"></div>
+          </div>
+          <aside class="subtitle-preview-summary" aria-labelledby="subtitle-preview-summary-title">
+            <p class="kicker">EDIT SUMMARY</p>
+            <h4 id="subtitle-preview-summary-title">字幕摘要</h4>
+            <div class="subtitle-review-meta" id="subtitle-review-meta" aria-live="polite"></div>
+          </aside>
+        </div>
+        <div class="subtitle-timeline-toolbar">
+          <div class="subtitle-timeline-title">
+            <p class="kicker">TIMELINE</p>
+            <strong>字幕、影片與聲音</strong>
+            <span class="subtitle-transcript-basis" id="subtitle-transcript-basis">逐字稿：未標記版本</span>
+          </div>
+          <div class="subtitle-zoom-control" aria-label="字幕時間軸縮放">
+            <button class="step-arrow step-arrow-back" id="subtitle-undo-button" type="button" disabled aria-label="復原上一個字幕修改"><span aria-hidden="true">↶</span></button>
+            <button class="step-arrow step-arrow-forward" id="subtitle-redo-button" type="button" disabled aria-label="重做下一個字幕修改"><span aria-hidden="true">↷</span></button>
+            <label class="subtitle-size-control">
+              <span>字幕大小</span>
+              <input id="subtitle-font-scale" type="number" min="27" max="55" step="1" value="30" inputmode="numeric" aria-label="字幕大小，單位 pt" />
+              <em aria-hidden="true">pt</em>
+            </label>
+            <button class="mini-button" id="subtitle-zoom-out" type="button" aria-label="縮小字幕時間軸">−</button>
+            <label>
+              <span>縮放</span>
+              <input id="subtitle-zoom" type="range" min="0.5" max="8" step="0.5" value="5" />
+            </label>
+            <button class="mini-button" id="subtitle-zoom-in" type="button" aria-label="放大字幕時間軸">＋</button>
+            <output id="subtitle-zoom-label" for="subtitle-zoom">5.0x</output>
+          </div>
+        </div>
+        <div class="subtitle-timeline" id="subtitle-timeline" aria-label="字幕時間軸，可按住空白處拖曳左右移動時間軸"></div>
+        <section class="subtitle-segment-inspector" id="subtitle-segment-inspector" aria-labelledby="subtitle-segment-inspector-title" hidden>
+          <div class="subtitle-inspector-heading">
+            <div>
+              <p class="kicker">SELECTED CAPTION</p>
+              <h4 id="subtitle-segment-inspector-title">字幕相關資訊</h4>
+            </div>
+            <div class="subtitle-inspector-nav" aria-label="字幕資訊操作">
+              <button class="mini-button subtitle-inspector-close" id="subtitle-inspector-close" type="button" aria-label="關閉字幕資訊" title="關閉字幕資訊"><span aria-hidden="true">×</span></button>
+            </div>
+          </div>
+          <div class="subtitle-inspector-grid">
+            <div class="subtitle-inspector-status">
+              <span>字幕狀態</span>
+              <strong id="subtitle-inspector-status">會顯示</strong>
+            </div>
+            <button class="subtitle-inspector-preview" id="subtitle-inspector-preview" type="button">播放字幕位置</button>
+            <label>
+              <span>開始秒數</span>
+              <input id="subtitle-inspector-start" type="number" min="0" step="0.01" inputmode="decimal" />
+            </label>
+            <label>
+              <span>結束秒數</span>
+              <input id="subtitle-inspector-end" type="number" min="0" step="0.01" inputmode="decimal" />
+            </label>
+            <div class="subtitle-inspector-duration">
+              <span>顯示時間</span>
+              <strong id="subtitle-inspector-duration">0.00 秒</strong>
+            </div>
+            <label class="subtitle-inspector-text-wrap">
+              <span>字幕內容</span>
+              <textarea id="subtitle-inspector-text" rows="2" spellcheck="false"></textarea>
+            </label>
+            <button class="mini-button subtitle-inspector-merge" id="subtitle-inspector-merge" type="button">合併下一句</button>
+          </div>
+        </section>
+        <div class="subtitle-caption-list" id="subtitle-caption-list" aria-hidden="true" hidden></div>
+        <div class="subtitle-review-actions">
+          <a class="mini-button" id="subtitle-draft-srt-link" href="#" download>下載 SRT 草稿</a>
+          <button class="button button-secondary" id="subtitle-back-to-transcript" type="button">回逐字稿重修</button>
+          <button class="button button-primary" id="subtitle-burn-button" type="button"><span>確認字幕，燒進影片</span><span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+    </section>
+
+    <div class="processing hidden" id="processing" role="status" aria-live="polite">
+      <div class="processing-card">
+        <div class="processing-main">
+          <div class="processing-number" id="processing-number">01</div>
+          <p class="kicker">AI 工作流</p>
+          <h2 id="processing-title">正在讀取影片⋯</h2>
+          <p id="processing-detail">第一次轉錄可能需要先下載本機模型，請保持頁面開啟。</p>
+          <p class="processing-elapsed" id="processing-elapsed">已處理 0:00</p>
+          <div class="progress"><i id="progress-bar"></i></div>
+          <ol class="ai-workflow" id="ai-workflow" aria-label="AI 處理進度"></ol>
+        </div>
+        <div class="processing-actions hidden" id="processing-failure-actions">
+          <button class="processing-demo" id="close-processing" type="button">關閉</button>
+          <button class="processing-demo processing-demo-primary" id="fix-processing" type="button">修改</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-toast hidden" id="action-toast" role="status"></div>
+
+    <script type="module" src="/app.js?v=20260909-roughcut-script-trim-1"></script>
+  </body>
+</html>

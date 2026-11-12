@@ -1,0 +1,35 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+
+test("presentation builder stays content-first instead of production-report-first", async () => {
+  const source = await readFile(new URL("../scripts/presentation_builder.mjs", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /VIDEO STORY STUDIO/);
+  assert.doesNotMatch(source, /自動摘要/);
+  assert.doesNotMatch(source, /B-roll cue/);
+  assert.doesNotMatch(source, /cueReason/);
+  assert.doesNotMatch(source, /簡報用途/);
+  assert.doesNotMatch(source, /剪輯師/);
+  assert.doesNotMatch(source, /下一步：校正逐字稿/);
+  assert.doesNotMatch(source, /把影片觀點/);
+  assert.doesNotMatch(source, /整理成可以理解的路徑/);
+  assert.doesNotMatch(source, /整份簡報保留/);
+  assert.doesNotMatch(source, /個內容段落\s+\/\s+核心論點/);
+  assert.doesNotMatch(source, /text: "這段在說什麼"/);
+  assert.doesNotMatch(source, /`觀眾帶走：/);
+  assert.doesNotMatch(source, /觀眾最後要記得/);
+  assert.doesNotMatch(source, /最後要帶走/);
+  assert.doesNotMatch(source, /text: "核心問題"/);
+  assert.match(source, /討論主軸/);
+  assert.match(source, /內容如何推進/);
+  assert.match(source, /整體結論/);
+  assert.match(source, /重點判斷/);
+  assert.match(source, /收束出的結論/);
+  assert.match(source, /整體邏輯/);
+  assert.match(source, /壓力來源/);
+  assert.match(source, /管理判斷/);
+  assert.match(source, /形成的結果/);
+  assert.match(source, /isDuplicateContent/);
+  assert.doesNotMatch(source, /slide\.images\.add/);
+  assert.doesNotMatch(source, /\$\{normalized\.slice\(0, max - 1\)\}…/);
+});

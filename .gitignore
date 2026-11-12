@@ -1,0 +1,15 @@
+node_modules/
+.venv/
+.visual-venv/
+.video-download-venv/
+.codex-tmp/
+.codex-video-review/
+outputs/
+output/
+tmp/
+models/*.pt
+models/local-broll/
+.env
+.DS_Store
+npm-debug.log*
+logs/*.log
